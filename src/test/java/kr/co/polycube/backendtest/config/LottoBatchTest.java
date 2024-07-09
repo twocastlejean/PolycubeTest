@@ -1,12 +1,12 @@
 package kr.co.polycube.backendtest.config;
 
+import kr.co.polycube.backendtest.config.batch.BatchConfig;
 import kr.co.polycube.backendtest.domain.Lotto;
 import kr.co.polycube.backendtest.domain.Winner;
 import kr.co.polycube.backendtest.repository.LottoRepository;
 import kr.co.polycube.backendtest.repository.WinnerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
@@ -14,11 +14,8 @@ import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,8 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBatchTest
 @SpringBootTest
-@ExtendWith(SpringExtension.class)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@SpringJUnitConfig({ BatchConfig.class, BatchTestConfig.class })
 public class LottoBatchTest {
 
     @Autowired

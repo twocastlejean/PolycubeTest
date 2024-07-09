@@ -33,7 +33,7 @@ public class BatchConfig {
 
     @Bean
     public Step lottoStep() {
-        return new StepBuilder("lottosStep", jobRepository)
+        return new StepBuilder("lottoStep", jobRepository)
                 .tasklet(lottoTasklet(), transactionManager)
                 .build();
     }

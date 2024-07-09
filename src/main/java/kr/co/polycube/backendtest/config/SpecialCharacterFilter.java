@@ -1,18 +1,26 @@
 package kr.co.polycube.backendtest.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.co.polycube.backendtest.exception.InvalidURLException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Component
 public class SpecialCharacterFilter implements Filter {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -27,10 +35,15 @@ public class SpecialCharacterFilter implements Filter {
         log.info("Filtering queryString: {}", queryString);
 
 
-        if (!isValidURL(requestURI) || !isValidURL(queryString)) {
-            log.warn("Invalid requestURI: {}", requestURI);
-            httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid URL: No Special Character Allowed");
+        if (isValidURL(requestURI) || isValidURL(queryString)) {
+            log.warn("Invalid requestURI: {}", httpRequest.getRequestURL().toString());
+            //throw new InvalidURLException("Invalid URL - No Special Character Allowed: " + httpRequest.getRequestURL().toString());
 
+            httpResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            httpResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("reason", "Invalid URL - No Special Character Allowed: " + httpRequest.getRequestURL().toString());
+            httpResponse.getWriter().write(objectMapper.writeValueAsString(errorResponse));
             return;
         }
 
@@ -38,6 +51,6 @@ public class SpecialCharacterFilter implements Filter {
     }
 
     private boolean isValidURL(String url) {
-        return !url.matches(".*[^\\w&=?/:].*");
+        return url.matches(".*[^\\w&=?/:].*");
     }
 }

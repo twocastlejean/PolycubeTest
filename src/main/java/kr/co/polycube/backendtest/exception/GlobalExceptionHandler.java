@@ -3,8 +3,6 @@ package kr.co.polycube.backendtest.exception;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,6 +34,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleNoResourceFoundException(NoResourceFoundException e) {
         log.error("No resource found for request: {}", e.getResourcePath());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("No resource found for request: " + e.getResourcePath()));
+    }
+
+    @ExceptionHandler(InvalidURLException.class)
+    public ResponseEntity<Object> handleInvalidURLException(InvalidURLException e) {
+        log.error("Invalid URL: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)

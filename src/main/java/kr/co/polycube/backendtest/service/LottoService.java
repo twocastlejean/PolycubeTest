@@ -18,6 +18,7 @@ public class LottoService {
     private static final int MAX_NUMBER = 45;
 
     public LottoResponse createLotto() {
+        log.info("[LottoService.createLotto]");
         List<Integer> numbersList = getLottoNumbers();
 
         Lotto lotto = new Lotto(numbersList);

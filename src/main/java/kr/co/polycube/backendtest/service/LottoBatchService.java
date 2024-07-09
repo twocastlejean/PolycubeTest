@@ -5,6 +5,7 @@ import kr.co.polycube.backendtest.domain.Winner;
 import kr.co.polycube.backendtest.repository.LottoRepository;
 import kr.co.polycube.backendtest.repository.WinnerRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LottoBatchService {
@@ -22,6 +24,7 @@ public class LottoBatchService {
     private static final int MAX_NUMBER = 45;
 
     public void checkWinners() {
+        log.info("[LottoBatchService.checkWinners]");
         List<Integer> winningNumbers = getWinningNumbers();
 
         List<Lotto> lottos = lottoRepository.findAll();

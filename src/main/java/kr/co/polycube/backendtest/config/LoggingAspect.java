@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.util.Objects;
+
 @Slf4j
 @Aspect
 @Component
@@ -20,7 +22,7 @@ public class LoggingAspect {
 
     @Before("pointcut()")
     public void logUserAgent(JoinPoint joinPoint) {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         String userAgent = request.getHeader("User-Agent");
         log.info("User-Agent: {}", userAgent);
     }
